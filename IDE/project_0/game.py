@@ -1,42 +1,59 @@
 """game guess the number"""
 
 import numpy as np
-def random_predict(number:int=1) -> int:
-    """__game guess the number
+
+def optimal_predict(number: int = 1) -> int:
+    """Рандомно угадываем число
 
     Args:
-        number (int, optional): _загаданное число_. Defaults to 1.
+        number (int, optional): Загаданное число. Defaults to 1.
 
     Returns:
-        int: _число попыток_
+        int: Число попыток
     """
+    min = 1
+    max = 101
+    number = np.random.randint(min, max)
     count = 0
     while True:
-        count +=1
-        predict_number = np.random.randint(1,101) #предполагаемое число
-        if number == predict_number:
-            break #выход из цикла если угадали
-    return(count)
+        count+=1
+        mid = (min+max) // 2
+    
+        if mid > number:
+            max = mid
+    
+        elif mid < number:
+            min = mid
 
-def score_game(random_predict) -> int:
-    """_за какое в среднем кол-во попыток угадывает из 1000 подходов_
+        else:
+            print(f"Компьютер угадал число за {count} попыток. Это число {number}")
+            break #конец игры выход из цикла
+    return count
+
+
+def score_game(optimal_predict) -> int:
+    """За какое количство попыток в среднем за 1000 подходов угадывает наш алгоритм
 
     Args:
-        random_predict (_type_): _функция угадывания_
+        random_predict ([type]): функция угадывания
 
     Returns:
-        int: _среднее кол-во попыток_
+        int: среднее количество попыток
     """
-    count_ls =[]
-    np.random.seed(1) #фиксируем сид для воспроизводимости
-    random_array = np.random.randint(1,101, size=(1000)) #загадали список чисел
-    
+    count_ls = []
+    #np.random.seed(1)  # фиксируем сид для воспроизводимости
+    random_array = np.random.randint(1, 101, size=(1000))  # загадали список чисел
+
     for number in random_array:
-        count_ls.append(random_predict(number))
-    
+        count_ls.append(optimal_predict(number))
+
     score = int(np.mean(count_ls))
-    print(f'Ваш алгоритм угадывает число в среднем за: {score} попыток')
-    return(score)
-#run
-score_game(random_predict)      
+    print(f"Ваш алгоритм угадывает число в среднем за:{score} попыток")
+    return score
+
+
+if __name__ == "__main__":
+    # RUN
+    score_game(optimal_predict)
+ 
 
